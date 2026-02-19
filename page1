@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Precificação - iOS 26 Style</title>
+    <style>
+        :root {
+            --glass-bg: rgba(20, 20, 22, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --accent: #ff375f;
+            --success: #30d158;
+            --warning: #ff9f0a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            background-color: #000;
+            overflow-x: hidden;
+        }
+
+        .liquid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(45deg, #ff375f, #5e5ce6, #0a84ff, #32ade6);
+            background-size: 400% 400%;
+            animation: liquidFlow 12s ease-in-out infinite;
+            filter: blur(100px);
+            opacity: 0.6;
+            transform: scale(1.2);
+        }
+
+        @keyframes liquidFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            border-radius: 36px;
+            max-width: 480px;
+            width: 100%;
+            padding: 35px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 26px;
+        }
+
+        .segment-control {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 5px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .segment-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            border-radius: 16px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-bottom: 0;
+        }
+
+        .segment-btn.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .form-group { margin-bottom: 16px; width: 100%; }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            margin-left: 4px;
+            transition: color 0.3s ease;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: var(--text-main);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        input::placeholder { color: rgba(255,255,255,0.3); }
+
+        input:focus, select:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        select option { background: #1c1c1e; color: #fff; }
+
+        .row { display: flex; gap: 15px; }
+        .row .form-group { flex: 1; }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            margin: 25px 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            color: white;
+            border-radius: 20px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-calc {
+            background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+            border: none;
+            box-shadow: 0 8px 20px rgba(10, 132, 255, 0.3);
+        }
+        
+        .btn-calc:hover { transform: scale(1.02); }
+        .btn-calc:active { transform: scale(0.97); }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #30d158, #28a745);
+            border: none;
+            box-shadow: 0 8px 20px rgba(48, 209, 88, 0.2);
+        }
+
+        .results {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 24px;
+            border-radius: 24px;
+            margin-top: 25px;
+            display: none;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .highlight {
+            font-weight: 600;
+            font-size: 19px;
+            color: #fff;
+            padding: 8px 0;
+        }
+
+        .roas-box {
+            padding: 20px;
+            border-radius: 18px;
+            margin-top: 20px;
+            text-align: center;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .roas-box.status-good {
+            background: rgba(48, 209, 88, 0.1);
+            border-color: rgba(48, 209, 88, 0.3);
+        }
+        .roas-box.status-good #roasStatus { color: var(--success); }
+
+        .roas-box.status-warning {
+            background: rgba(255, 159, 10, 0.1);
+            border-color: rgba(255, 159, 10, 0.3);
+        }
+        .roas-box.status-warning #roasStatus { color: var(--warning); }
+
+        .roas-box.status-bad {
+            background: rgba(255, 55, 95, 0.1);
+            border-color: rgba(255, 55, 95, 0.3);
+        }
+        .roas-box.status-bad #roasStatus { color: var(--accent); }
+        .roas-box.status-empty {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .roas-box.status-empty #roasStatus { color: #fff; }
+
+        #roasStatus { font-weight: 700; font-size: 20px; margin-bottom: 5px; }
+        #roasMargin { font-size: 14px; margin-bottom: 15px; color: rgba(255,255,255,0.9); }
+        
+        .ideal-roas-ref {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 10px;
+        }
+
+        /* Ajustes para Celular (Mobile Responsiveness) */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+                border-radius: 28px;
+            }
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .segment-btn {
+                font-size: 14px;
+                padding: 10px;
+            }
+            h2 {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+            .form-group {
+                margin-bottom: 12px;
+            }
+            .result-item {
+                font-size: 14px;
+            }
+            .highlight {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="liquid-background"></div>
+
+<div class="container">
+    <h2>Precificação Inteligente</h2>
+
+    <div class="segment-control">
+        <button class="segment-btn active" id="btnCpf" onclick="setRegime('cpf')">Pessoa Física (CPF)</button>
+        <button class="segment-btn" id="btnCnpj" onclick="setRegime('cnpj')">Empresa (CNPJ)</button>
+    </div>
+    
+    <div class="row">
+        <div class="form-group">
+            <label>Custo de Produção (R$)</label>
+            <input type="number" id="costProduct" placeholder="Ex: 15.00" step="0.01">
+        </div>
+        <div class="form-group">
+            <label>Embalagem (R$)</label>
+            <input type="number" id="costPackaging" placeholder="Ex: 1.50" step="0.01">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label>Comissão Shopee (%)</label>
+            <input type="number" id="feeCommission" value="20" step="0.1">
+        </div>
+        <div class="form-group">
+            <label id="labelTax">Imposto NF (%)</label>
+            <input type="number" id="feeTax" value="0" step="0.1" style="background: var(--input-bg);">
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="form-group">
+            <label id="labelFixed">Taxa Fixa Shopee (R$)</label>
+            <input type="number" id="feeFixed" value="7.00" step="0.01" style="background: rgba(255, 55, 95, 0.15);">
+        </div>
+        <div class="form-group">
+            <label>Frete Vendedor (R$)</label>
+            <input type="number" id="feeShipping" value="0.00" step="0.01">
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="form-group">
+        <label>Estratégia de Precificação</label>
+        <select id="pricingMode">
+            <option value="margin">1. Margem de Lucro Desejada (%)</option>
+            <option value="price">2. Preço de Venda Final (R$)</option>
+            <option value="profit">3. Lucro Líquido Desejado (R$)</option>
+        </select>
+    </div>
+    
+    <div class="row">
+        <div class="form-group">
+            <label id="targetLabel">Valor Alvo (%)</label>
+            <input type="number" id="targetValue" placeholder="Ex: 20" step="0.01">
+        </div>
+        <div class="form-group">
+            <label>Seu ROAS Atual/Esperado</label>
+            <input type="number" id="inputRoas" placeholder="Ex: 5.0" step="0.1" style="background: rgba(10, 132, 255, 0.15); border-color: rgba(10, 132, 255, 0.3);">
+        </div>
+    </div>
+
+    <button class="btn-calc" onclick="calculate()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Calcular Preço & Analisar ROAS
+    </button>
+
+    <div id="resultsArea" class="results">
+        <div class="result-item highlight">
+            <span>Preço de Venda:</span>
+            <span id="resSalePrice">R$ 0,00</span>
+        </div>
+        <div class="result-item highlight">
+            <span>Lucro Base (Sem Ads):</span>
+            <span id="resNetProfit">R$ 0,00</span>
+        </div>
+        <div class="result-item">
+            <span>Margem Base:</span>
+            <span id="resMargin">0.00%</span>
+        </div>
+        
+        <div id="roasBox" class="roas-box status-empty">
+            <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 8px;">Diagnóstico do seu ROAS:</div>
+            <div id="roasStatus">Insira um ROAS</div>
+            <div id="roasMargin">Calcule para ver o lucro real livre.</div>
+            
+            <div class="ideal-roas-ref">
+                🎯 ROAS Meta (para 10% livre): <span id="resIdealRoas" style="font-weight: bold; color: #fff;">0.00</span>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <button class="btn-whatsapp" onclick="shareWhatsApp()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            Copiar & Compartilhar
+        </button>
+    </div>
+</div>
+
+<script>
+    function setRegime(regime) {
+        const btnCpf = document.getElementById('btnCpf');
+        const btnCnpj = document.getElementById('btnCnpj');
+        const inputTax = document.getElementById('feeTax');
+        const inputFixed = document.getElementById('feeFixed');
+        const labelFixed = document.getElementById('labelFixed');
+
+        if(regime === 'cpf') {
+            btnCpf.classList.add('active');
+            btnCnpj.classList.remove('active');
+            
+            inputTax.value = 0;
+            inputTax.style.background = 'var(--input-bg)';
+            
+            inputFixed.value = 7.00; 
+            inputFixed.style.background = 'rgba(255, 55, 95, 0.2)'; 
+            labelFixed.style.color = 'var(--accent)';
+            
+            setTimeout(() => {
+                inputFixed.style.background = 'var(--input-bg)';
+                labelFixed.style.color = 'var(--text-muted)';
+            }, 800);
+
+        } else {
+            btnCnpj.classList.add('active');
+            btnCpf.classList.remove('active');
+            
+            inputTax.value = 0; // Alterado para iniciar zerado
+            inputTax.style.background = 'rgba(255, 255, 255, 0.15)'; 
+            
+            inputFixed.value = 4.00; 
+            inputFixed.style.background = 'rgba(48, 209, 88, 0.2)'; 
+            labelFixed.style.color = 'var(--success)';
+            
+            setTimeout(() => {
+                inputFixed.style.background = 'var(--input-bg)';
+                labelFixed.style.color = 'var(--text-muted)';
+            }, 800);
+        }
+        
+        if (document.getElementById('resultsArea').style.display === 'block') {
+            calculate();
+        }
+    }
+
+    document.getElementById('pricingMode').addEventListener('change', function() {
+        const mode = this.value;
+        const label = document.getElementById('targetLabel');
+        if(mode === 'margin') label.innerText = 'Margem Desejada (%)';
+        if(mode === 'price') label.innerText = 'Preço Final (R$)';
+        if(mode === 'profit') label.innerText = 'Lucro Desejado (R$)';
+    });
+
+    let globalResults = {};
+
+    function calculate() {
+        const costProduct = parseFloat(document.getElementById('costProduct').value) || 0;
+        const costPackaging = parseFloat(document.getElementById('costPackaging').value) || 0;
+        const feeCommission = (parseFloat(document.getElementById('feeCommission').value) || 0) / 100;
+        const feeTax = (parseFloat(document.getElementById('feeTax').value) || 0) / 100;
+        const feeFixed = parseFloat(document.getElementById('feeFixed').value) || 0;
+        const feeShipping = parseFloat(document.getElementById('feeShipping').value) || 0;
+        
+        const mode = document.getElementById('pricingMode').value;
+        const targetValue = parseFloat(document.getElementById('targetValue').value) || 0;
+        const inputRoas = parseFloat(document.getElementById('inputRoas').value) || 0;
+
+        const fixedCosts = costProduct + costPackaging + feeFixed + feeShipping;
+        const variableFeesPercentage = feeCommission + feeTax;
+
+        let salePrice = 0, netProfit = 0, profitMargin = 0;
+
+        if (mode === 'margin') {
+            const margin = targetValue / 100;
+            salePrice = fixedCosts / (1 - variableFeesPercentage - margin);
+            netProfit = salePrice * margin;
+            profitMargin = margin;
+        } else if (mode === 'price') {
+            salePrice = targetValue;
+            netProfit = salePrice - fixedCosts - (salePrice * variableFeesPercentage);
+            profitMargin = salePrice > 0 ? (netProfit / salePrice) : 0;
+        } else if (mode === 'profit') {
+            netProfit = targetValue;
+            salePrice = (fixedCosts + netProfit) / (1 - variableFeesPercentage);
+            profitMargin = salePrice > 0 ? (netProfit / salePrice) : 0;
+        }
+
+        const roasBox = document.getElementById('roasBox');
+        const roasStatus = document.getElementById('roasStatus');
+        const roasMargin = document.getElementById('roasMargin');
+        const resIdealRoas = document.getElementById('resIdealRoas');
+
+        const marginForAds = profitMargin - 0.10;
+        let idealRoasDisplay = marginForAds > 0 ? (1 / marginForAds).toFixed(2) : "Impossível (Aumente o Preço)";
+        resIdealRoas.innerText = idealRoasDisplay;
+
+        let finalProfitMargin = profitMargin;
+        let statusText = "Insira seu ROAS";
+        let subText = "Para ver quanto lucro sobra de verdade.";
+
+        if (inputRoas > 0) {
+            const adSpendPercent = 1 / inputRoas;
+            finalProfitMargin = profitMargin - adSpendPercent;
+            const finalProfitValue = salePrice * finalProfitMargin;
+
+            subText = `Lucro após Ads: ${(finalProfitMargin * 100).toFixed(2)}% (${finalProfitValue.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})})`;
+
+            if (finalProfitMargin >= 0.10) {
+                roasBox.className = 'roas-box status-good';
+                statusText = "🟢 ROAS Excelente!";
+            } else if (finalProfitMargin > 0) {
+                roasBox.className = 'roas-box status-warning';
+                statusText = "🟡 Atenção! Lucro Baixo";
+            } else {
+                roasBox.className = 'roas-box status-bad';
+                statusText = "🔴 Prejuízo!";
+            }
+        } else {
+            roasBox.className = 'roas-box status-empty';
+        }
+
+        roasStatus.innerText = statusText;
+        roasMargin.innerText = subText;
+
+        globalResults = {
+            costProduct, costPackaging, 
+            commissionVal: salePrice * feeCommission,
+            taxVal: salePrice * feeTax,
+            feeFixed, feeShipping, salePrice, netProfit,
+            marginBase: profitMargin * 100, 
+            roasUser: inputRoas,
+            marginReal: finalProfitMargin * 100,
+            statusText: statusText
+        };
+
+        document.getElementById('resSalePrice').innerText = salePrice.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        document.getElementById('resNetProfit').innerText = netProfit.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        document.getElementById('resMargin').innerText = (profitMargin * 100).toFixed(2) + '%';
+        
+        document.getElementById('resultsArea').style.display = 'block';
+    }
+
+    function shareWhatsApp() {
+        const brl = (val) => val.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        
+        let text = `*Resumo de Precificação*\n\n📦 *Custos:*\n- Produção: ${brl(globalResults.costProduct)}\n- Embalagem: ${brl(globalResults.costPackaging)}\n\n🧾 *Taxas:*\n- Comissão Plataforma: ${brl(globalResults.commissionVal)}\n`;
+        
+        if(globalResults.taxVal > 0) text += `- Imposto NF: ${brl(globalResults.taxVal)}\n`;
+        
+        text += `- Frete: ${brl(globalResults.feeShipping)}\n- Taxa Fixa: ${brl(globalResults.feeFixed)}\n\n💰 *Resultados Base:*\n- *Preço de Venda:* ${brl(globalResults.salePrice)}\n- Lucro (Sem Ads): ${brl(globalResults.netProfit)} (${globalResults.marginBase.toFixed(2)}%)\n\n📈 *Diagnóstico de Ads:*\n`;
+
+        if (globalResults.roasUser > 0) {
+            text += `- ROAS Aplicado: ${globalResults.roasUser}\n- Status: ${globalResults.statusText}\n- *Lucro Final (Livre):* ${globalResults.marginReal.toFixed(2)}%`;
+        } else {
+            text += `- Nenhum ROAS calculado.`;
+        }
+
+        navigator.clipboard.writeText(text).then(() => {
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(whatsappUrl, '_blank');
+        }).catch(() => {
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        });
+    }
+</script>
+
+</body>
+</html>
