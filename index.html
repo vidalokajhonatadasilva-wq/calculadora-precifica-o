@@ -2,8 +2,11 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Precificação - iOS 26 Style</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Precificação Pro</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
     <style>
         :root {
             --glass-bg: rgba(20, 20, 22, 0.4);
@@ -14,271 +17,105 @@
             --accent: #ff375f;
             --success: #30d158;
             --warning: #ff9f0a;
+            --shopee: #ee4d2d;
+            --tiktok: #00f2fe;
+            --meli: #f1c40f;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, sans-serif;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-main);
-            background-color: #000;
-            overflow-x: hidden;
+            margin: 0; padding: 15px; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            color: var(--text-main); background-color: #000; overflow-x: hidden;
         }
 
         .liquid-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
             background: linear-gradient(45deg, #ff375f, #5e5ce6, #0a84ff, #32ade6);
-            background-size: 400% 400%;
-            animation: liquidFlow 12s ease-in-out infinite;
-            filter: blur(100px);
-            opacity: 0.6;
-            transform: scale(1.2);
+            background-size: 400% 400%; animation: liquidFlow 12s ease-in-out infinite;
+            filter: blur(100px); opacity: 0.6; transform: scale(1.2);
         }
 
-        @keyframes liquidFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        @keyframes liquidFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid var(--glass-border);
-            border-radius: 36px;
-            max-width: 480px;
-            width: 100%;
-            padding: 35px;
+            background: var(--glass-bg); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border); border-radius: 36px;
+            max-width: 500px; width: 100%; padding: 30px;
             box-shadow: 0 24px 64px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-            position: relative;
-            box-sizing: border-box;
+            position: relative; box-sizing: border-box;
+            max-height: 95vh; overflow-y: auto; scrollbar-width: none;
         }
+        .container::-webkit-scrollbar { display: none; }
 
-        h2 {
-            text-align: center;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 26px;
+        h2 { text-align: center; font-weight: 600; letter-spacing: -0.5px; margin-top: 0; margin-bottom: 20px; font-size: 24px; }
+
+        .mk-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+        .mk-tab {
+            flex: 1; padding: 10px; border-radius: 14px; border: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.3); color: var(--text-muted); font-weight: 600; font-size: 13px; cursor: pointer;
+            transition: all 0.3s;
         }
+        .mk-tab.active-shopee { background: rgba(238, 77, 45, 0.2); border-color: var(--shopee); color: #fff; }
+        .mk-tab.active-tiktok { background: rgba(0, 242, 254, 0.2); border-color: var(--tiktok); color: #fff; }
+        .mk-tab.active-meli { background: rgba(241, 196, 15, 0.2); border-color: var(--meli); color: #fff; }
 
-        .segment-control {
-            display: flex;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 20px;
-            padding: 5px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
+        .segment-control { display: flex; background: rgba(0, 0, 0, 0.3); border-radius: 20px; padding: 5px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08); }
+        .segment-btn { flex: 1; padding: 10px; background: transparent; border: none; border-radius: 16px; color: var(--text-muted); font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s; }
+        .segment-btn.active { background: rgba(255, 255, 255, 0.15); color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.1); }
+        .segment-btn.active-meli { background: rgba(241, 196, 15, 0.25); color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid rgba(241, 196, 15, 0.3); }
 
-        .segment-btn {
-            flex: 1;
-            padding: 12px;
-            background: transparent;
-            border: none;
-            border-radius: 16px;
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            margin-bottom: 0;
-        }
-
-        .segment-btn.active {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .form-group { margin-bottom: 16px; width: 100%; }
+        .row { display: flex; gap: 12px; margin-bottom: 12px;}
+        .form-group { flex: 1; width: 100%; position: relative; }
         
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-            margin-left: 4px;
-            transition: color 0.3s ease;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 14px 16px;
-            background: var(--input-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            box-sizing: border-box;
-            font-size: 16px;
-            color: var(--text-main);
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        input::placeholder { color: rgba(255,255,255,0.3); }
-
-        input:focus, select:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
-            transform: translateY(-2px);
-        }
-
+        label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 6px; color: var(--text-muted); margin-left: 4px; transition: color 0.3s; }
+        input, select { width: 100%; padding: 12px 14px; background: var(--input-bg); border: 1px solid var(--glass-border); border-radius: 16px; box-sizing: border-box; font-size: 15px; color: var(--text-main); transition: all 0.3s; }
+        input:focus, select:focus { outline: none; background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05); }
         select option { background: #1c1c1e; color: #fff; }
 
-        .row { display: flex; gap: 15px; }
-        .row .form-group { flex: 1; }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); margin: 20px 0; }
+        .section-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;}
 
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            margin: 25px 0;
-        }
+        button.main-btn { width: 100%; padding: 16px; color: white; border-radius: 20px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-bottom: 12px; background: linear-gradient(135deg, #0a84ff, #5e5ce6); border: none; box-shadow: 0 8px 20px rgba(10, 132, 255, 0.3); display: flex; justify-content: center; align-items: center; gap: 8px; }
+        button.main-btn:active { transform: scale(0.97); }
 
-        button {
-            width: 100%;
-            padding: 16px;
-            color: white;
-            border-radius: 20px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-calc {
-            background: linear-gradient(135deg, #0a84ff, #5e5ce6);
-            border: none;
-            box-shadow: 0 8px 20px rgba(10, 132, 255, 0.3);
-        }
+        .results { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 24px; margin-top: 20px; display: none; }
         
-        .btn-calc:hover { transform: scale(1.02); }
-        .btn-calc:active { transform: scale(0.97); }
+        .animate-up { animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideUp { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
 
-        .btn-whatsapp {
-            background: linear-gradient(135deg, #30d158, #28a745);
-            border: none;
-            box-shadow: 0 8px 20px rgba(48, 209, 88, 0.2);
-        }
+        .result-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 14px; color: rgba(255,255,255,0.85); }
+        .highlight { font-weight: 600; font-size: 18px; color: #fff; padding: 4px 0; }
+        .promo-highlight { color: #ff9f0a; font-weight: bold; }
 
-        .results {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 24px;
-            border-radius: 24px;
-            margin-top: 25px;
-            display: none;
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 15px;
-            color: rgba(255,255,255,0.85);
-        }
-
-        .highlight {
-            font-weight: 600;
-            font-size: 19px;
-            color: #fff;
-            padding: 8px 0;
-        }
-
-        .roas-box {
-            padding: 20px;
-            border-radius: 18px;
-            margin-top: 20px;
-            text-align: center;
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .roas-box.status-good {
-            background: rgba(48, 209, 88, 0.1);
-            border-color: rgba(48, 209, 88, 0.3);
-        }
+        .roas-box { padding: 16px; border-radius: 16px; margin-top: 15px; text-align: center; border: 1px solid transparent; transition: all 0.3s ease; }
+        .roas-box.status-good { background: rgba(48, 209, 88, 0.1); border-color: rgba(48, 209, 88, 0.3); }
         .roas-box.status-good #roasStatus { color: var(--success); }
-
-        .roas-box.status-warning {
-            background: rgba(255, 159, 10, 0.1);
-            border-color: rgba(255, 159, 10, 0.3);
-        }
+        .roas-box.status-warning { background: rgba(255, 159, 10, 0.1); border-color: rgba(255, 159, 10, 0.3); }
         .roas-box.status-warning #roasStatus { color: var(--warning); }
-
-        .roas-box.status-bad {
-            background: rgba(255, 55, 95, 0.1);
-            border-color: rgba(255, 55, 95, 0.3);
-        }
+        .roas-box.status-bad { background: rgba(255, 55, 95, 0.1); border-color: rgba(255, 55, 95, 0.3); }
         .roas-box.status-bad #roasStatus { color: var(--accent); }
-        .roas-box.status-empty {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        .roas-box.status-empty #roasStatus { color: #fff; }
-
-        #roasStatus { font-weight: 700; font-size: 20px; margin-bottom: 5px; }
-        #roasMargin { font-size: 14px; margin-bottom: 15px; color: rgba(255,255,255,0.9); }
+        .roas-box.status-empty { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); }
         
-        .ideal-roas-ref {
-            font-size: 12px;
-            color: rgba(255,255,255,0.6);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 10px;
+        #roasStatus { font-weight: 700; font-size: 18px; margin-bottom: 5px; }
+        #roasMargin { font-size: 13px; margin-bottom: 10px; color: rgba(255,255,255,0.9); }
+        .ideal-roas-ref { font-size: 12px; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; }
+
+        .btn-whatsapp { background: linear-gradient(135deg, #30d158, #28a745); width: 100%; border: none; padding: 14px; color: white; border-radius: 18px; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(48, 209, 88, 0.2); transition: transform 0.2s;}
+        .btn-whatsapp:active { transform: scale(0.97); }
+
+        .alert-box {
+            background: rgba(255, 159, 10, 0.15); border: 1px solid rgba(255, 159, 10, 0.4);
+            border-radius: 12px; padding: 12px; margin-top: 15px; color: var(--warning);
+            font-size: 13px; text-align: center; font-weight: 500; display: none;
+            animation: pulseWarning 2s infinite;
         }
 
-        /* Ajustes para Celular (Mobile Responsiveness) */
+        @keyframes pulseWarning { 0% { box-shadow: 0 0 0 0 rgba(255, 159, 10, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(255, 159, 10, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 159, 10, 0); } }
+
         @media (max-width: 480px) {
-            .container {
-                padding: 25px 20px;
-                border-radius: 28px;
-            }
-            .row {
-                flex-direction: column;
-                gap: 0;
-            }
-            .segment-btn {
-                font-size: 14px;
-                padding: 10px;
-            }
-            h2 {
-                font-size: 22px;
-                margin-bottom: 15px;
-            }
-            .form-group {
-                margin-bottom: 12px;
-            }
-            .result-item {
-                font-size: 14px;
-            }
-            .highlight {
-                font-size: 17px;
-            }
+            .container { padding: 20px; border-radius: 28px; }
+            .row { flex-direction: column; gap: 10px; margin-bottom: 10px;}
         }
     </style>
 </head>
@@ -287,50 +124,72 @@
 <div class="liquid-background"></div>
 
 <div class="container">
-    <h2>Precificação Inteligente</h2>
+    <h2>Precificação Pro</h2>
 
-    <div class="segment-control">
-        <button class="segment-btn active" id="btnCpf" onclick="setRegime('cpf')">Pessoa Física (CPF)</button>
-        <button class="segment-btn" id="btnCnpj" onclick="setRegime('cnpj')">Empresa (CNPJ)</button>
-    </div>
-    
-    <div class="row">
-        <div class="form-group">
-            <label>Custo de Produção (R$)</label>
-            <input type="number" id="costProduct" placeholder="Ex: 15.00" step="0.01">
-        </div>
-        <div class="form-group">
-            <label>Embalagem (R$)</label>
-            <input type="number" id="costPackaging" placeholder="Ex: 1.50" step="0.01">
-        </div>
+    <div class="mk-tabs">
+        <button class="mk-tab active-shopee" id="tabShopee" onclick="setMarketplace('shopee')">Shopee</button>
+        <button class="mk-tab" id="tabTiktok" onclick="setMarketplace('tiktok')">TikTok Shop</button>
+        <button class="mk-tab" id="tabMeli" onclick="setMarketplace('meli')">Mercado Livre</button>
     </div>
 
+    <div id="controlShopee" class="segment-control">
+        <button class="segment-btn active" id="btnCpf" onclick="setShopeeRegime('cpf')">Pessoa Física (CPF)</button>
+        <button class="segment-btn" id="btnCnpj" onclick="setShopeeRegime('cnpj')">Empresa (CNPJ)</button>
+    </div>
+
+    <div id="controlMeli" class="segment-control" style="display: none;">
+        <button class="segment-btn active-meli" id="btnClassic" onclick="setMeliAd('classic')">Anúncio Clássico</button>
+        <button class="segment-btn" id="btnPremium" onclick="setMeliAd('premium')">Anúncio Premium</button>
+    </div>
+
+    <div class="section-title">📦 Produto e Custos</div>
     <div class="row">
         <div class="form-group">
-            <label>Comissão Shopee (%)</label>
-            <input type="number" id="feeCommission" value="20" step="0.1">
+            <label>Custo Unitário (R$)</label>
+            <input type="text" inputmode="decimal" id="costProduct" placeholder="Ex: 15.00">
+        </div>
+        <div class="form-group">
+            <label>Qtd. no Kit/Combo</label>
+            <input type="number" id="kitQty" value="1" step="1">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <label>Embalagem Total (R$)</label>
+            <input type="text" inputmode="decimal" id="costPackaging" value="1.50">
+        </div>
+        <div class="form-group">
+            <label id="labelShipping">Frete Vendedor (R$)</label>
+            <input type="text" inputmode="decimal" id="feeShipping" value="0.00">
+        </div>
+    </div>
+
+    <div class="section-title">🧾 Taxas (<span id="txtMkName">Shopee</span>)</div>
+    <div class="row">
+        <div class="form-group">
+            <label>Comissão (%)</label>
+            <input type="text" inputmode="decimal" id="feeCommission" value="20">
         </div>
         <div class="form-group">
             <label id="labelTax">Imposto NF (%)</label>
-            <input type="number" id="feeTax" value="0" step="0.1" style="background: var(--input-bg);">
+            <input type="text" inputmode="decimal" id="feeTax" value="0" style="background: var(--input-bg);">
         </div>
     </div>
-    
     <div class="row">
         <div class="form-group">
-            <label id="labelFixed">Taxa Fixa Shopee (R$)</label>
-            <input type="number" id="feeFixed" value="7.00" step="0.01" style="background: rgba(255, 55, 95, 0.15);">
+            <label id="labelFixed">Taxa Fixa (R$)</label>
+            <input type="text" inputmode="decimal" id="feeFixed" value="7.00">
         </div>
         <div class="form-group">
-            <label>Frete Vendedor (R$)</label>
-            <input type="number" id="feeShipping" value="0.00" step="0.01">
+            <label>Desconto Promoção (%)</label>
+            <input type="text" inputmode="decimal" id="promoDiscount" placeholder="Ex: 10 (Opcional)" style="background: rgba(255, 159, 10, 0.15);">
         </div>
     </div>
 
     <div class="divider"></div>
 
-    <div class="form-group">
-        <label>Estratégia de Precificação</label>
+    <div class="section-title">🎯 Estratégia & Tráfego Pago</div>
+    <div class="form-group" style="margin-bottom:12px;">
         <select id="pricingMode">
             <option value="margin">1. Margem de Lucro Desejada (%)</option>
             <option value="price">2. Preço de Venda Final (R$)</option>
@@ -341,95 +200,138 @@
     <div class="row">
         <div class="form-group">
             <label id="targetLabel">Valor Alvo (%)</label>
-            <input type="number" id="targetValue" placeholder="Ex: 20" step="0.01">
+            <input type="text" inputmode="decimal" id="targetValue" placeholder="Ex: 20">
         </div>
         <div class="form-group">
-            <label>Seu ROAS Atual/Esperado</label>
-            <input type="number" id="inputRoas" placeholder="Ex: 5.0" step="0.1" style="background: rgba(10, 132, 255, 0.15); border-color: rgba(10, 132, 255, 0.3);">
+            <label>ROAS da Campanha</label>
+            <input type="text" inputmode="decimal" id="inputRoas" placeholder="Ex: 5.0">
         </div>
     </div>
 
-    <button class="btn-calc" onclick="calculate()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        Calcular Preço & Analisar ROAS
+    <button class="main-btn" onclick="calculate()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Gerar Precificação
     </button>
 
     <div id="resultsArea" class="results">
+        <div class="result-item highlight promo-highlight" id="divBasePrice" style="display:none;">
+            <span>Preço Original ("De"):</span>
+            <span id="resBasePrice" style="text-decoration: line-through; font-size:16px;">R$ 0,00</span>
+        </div>
         <div class="result-item highlight">
-            <span>Preço de Venda:</span>
+            <span>Preço do Cliente ("Por"):</span>
             <span id="resSalePrice">R$ 0,00</span>
         </div>
         <div class="result-item highlight">
-            <span>Lucro Base (Sem Ads):</span>
+            <span>Lucro no Bolso:</span>
             <span id="resNetProfit">R$ 0,00</span>
         </div>
         <div class="result-item">
             <span>Margem Base:</span>
             <span id="resMargin">0.00%</span>
         </div>
+
+        <div id="meliShippingAlert" class="alert-box">
+            ⚠️ Atenção: A partir de R$ 79, o Mercado Livre exige Frete Grátis. A sua Taxa Fixa foi zerada. Preencha o "Frete Vendedor" acima para não ficar no prejuízo.
+        </div>
         
         <div id="roasBox" class="roas-box status-empty">
-            <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 8px;">Diagnóstico do seu ROAS:</div>
             <div id="roasStatus">Insira um ROAS</div>
-            <div id="roasMargin">Calcule para ver o lucro real livre.</div>
-            
-            <div class="ideal-roas-ref">
-                🎯 ROAS Meta (para 10% livre): <span id="resIdealRoas" style="font-weight: bold; color: #fff;">0.00</span>
-            </div>
+            <div id="roasMargin">Calcule para ver o lucro real com Ads.</div>
+            <div class="ideal-roas-ref">🎯 ROAS Meta (p/ 10% livre): <span id="resIdealRoas" style="font-weight: bold; color: #fff;">0.00</span></div>
         </div>
 
         <div class="divider"></div>
         <button class="btn-whatsapp" onclick="shareWhatsApp()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-            Copiar & Compartilhar
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+            </svg>
+            Compartilhar Relatório
         </button>
     </div>
 </div>
 
 <script>
-    function setRegime(regime) {
-        const btnCpf = document.getElementById('btnCpf');
-        const btnCnpj = document.getElementById('btnCnpj');
+    (function injectPWA() {
+        const manifest = {
+            "name": "Precificação Pro",
+            "short_name": "PreçoPro",
+            "display": "standalone",
+            "background_color": "#000000",
+            "theme_color": "#000000",
+            "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/5501/5501375.png", "sizes": "512x512", "type": "image/png"}]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="manifest" href="${URL.createObjectURL(manifestBlob)}">`);
+        
+        const swCode = `self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('fetch', e => {});`;
+        const swBlob = new Blob([swCode], {type: 'application/javascript'});
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register(URL.createObjectURL(swBlob));
+    })();
+
+    let currentMk = 'shopee';
+    let shopeeRegime = 'cpf';
+    let meliAd = 'classic';
+    let globalResults = {};
+
+    function getNum(elementId) {
+        let val = document.getElementById(elementId).value.toString().replace(',', '.');
+        return parseFloat(val) || 0;
+    }
+
+    function setMarketplace(mk) {
+        currentMk = mk;
+        const tabs = ['Shopee', 'Tiktok', 'Meli'];
+        tabs.forEach(t => document.getElementById('tab' + t).className = 'mk-tab');
+        document.getElementById('tab' + mk.charAt(0).toUpperCase() + mk.slice(1)).className = `mk-tab active-${mk}`;
+        
+        document.getElementById('txtMkName').innerText = { shopee: 'Shopee', tiktok: 'TikTok Shop', meli: 'Mercado Livre' }[mk];
+
+        document.getElementById('controlShopee').style.display = (mk === 'shopee') ? 'flex' : 'none';
+        document.getElementById('controlMeli').style.display = (mk === 'meli') ? 'flex' : 'none';
+        
+        document.getElementById('labelFixed').innerText = (mk === 'meli') ? "Taxa Fixa (Auto no MeLi)" : "Taxa Fixa (R$)";
+        
+        updateFees();
+    }
+
+    function setShopeeRegime(regime) {
+        shopeeRegime = regime;
+        document.getElementById('btnCpf').classList.toggle('active', regime === 'cpf');
+        document.getElementById('btnCnpj').classList.toggle('active', regime === 'cnpj');
+        
         const inputTax = document.getElementById('feeTax');
-        const inputFixed = document.getElementById('feeFixed');
-        const labelFixed = document.getElementById('labelFixed');
-
         if(regime === 'cpf') {
-            btnCpf.classList.add('active');
-            btnCnpj.classList.remove('active');
-            
-            inputTax.value = 0;
-            inputTax.style.background = 'var(--input-bg)';
-            
-            inputFixed.value = 7.00; 
-            inputFixed.style.background = 'rgba(255, 55, 95, 0.2)'; 
-            labelFixed.style.color = 'var(--accent)';
-            
-            setTimeout(() => {
-                inputFixed.style.background = 'var(--input-bg)';
-                labelFixed.style.color = 'var(--text-muted)';
-            }, 800);
-
+            inputTax.value = "0.00"; inputTax.style.background = 'var(--input-bg)';
         } else {
-            btnCnpj.classList.add('active');
-            btnCpf.classList.remove('active');
-            
-            inputTax.value = 0; // Alterado para iniciar zerado
-            inputTax.style.background = 'rgba(255, 255, 255, 0.15)'; 
-            
-            inputFixed.value = 4.00; 
-            inputFixed.style.background = 'rgba(48, 209, 88, 0.2)'; 
-            labelFixed.style.color = 'var(--success)';
-            
-            setTimeout(() => {
-                inputFixed.style.background = 'var(--input-bg)';
-                labelFixed.style.color = 'var(--text-muted)';
-            }, 800);
+            inputTax.value = "0.00"; inputTax.style.background = 'rgba(255, 255, 255, 0.15)'; 
+        }
+        updateFees();
+    }
+
+    function setMeliAd(adMode) {
+        meliAd = adMode;
+        document.getElementById('btnClassic').classList.toggle('active-meli', adMode === 'classic');
+        document.getElementById('btnPremium').classList.toggle('active-meli', adMode === 'premium');
+        updateFees();
+    }
+
+    function updateFees() {
+        const inputComm = document.getElementById('feeCommission');
+        const inputFixed = document.getElementById('feeFixed');
+        
+        if(currentMk === 'shopee') {
+            inputComm.value = 20;
+            inputFixed.value = shopeeRegime === 'cpf' ? "7.00" : "4.00";
+        } else if (currentMk === 'tiktok') {
+            inputComm.value = 8;
+            inputFixed.value = "3.00";
+        } else if (currentMk === 'meli') {
+            inputComm.value = meliAd === 'classic' ? 14 : 19;
+            inputFixed.value = "6.25"; 
         }
         
-        if (document.getElementById('resultsArea').style.display === 'block') {
-            calculate();
-        }
+        if (document.getElementById('resultsArea').style.display === 'block') calculate();
     }
 
     document.getElementById('pricingMode').addEventListener('change', function() {
@@ -440,116 +342,160 @@
         if(mode === 'profit') label.innerText = 'Lucro Desejado (R$)';
     });
 
-    let globalResults = {};
+    function solvePrice(baseFixedCosts, assumedFixedFee, assumedExtraVarPercent, variableFeesPercentage, mode, targetValue) {
+        let p = 0;
+        let totalFixed = baseFixedCosts + assumedFixedFee;
+        let totalVar = variableFeesPercentage + assumedExtraVarPercent;
+        
+        if (mode === 'margin') {
+            let margin = targetValue / 100;
+            if (1 - totalVar - margin <= 0) return 0;
+            p = totalFixed / (1 - totalVar - margin);
+        } else if (mode === 'price') {
+            p = targetValue;
+        } else if (mode === 'profit') {
+            if (1 - totalVar <= 0) return 0;
+            p = (totalFixed + targetValue) / (1 - totalVar);
+        }
+        return p;
+    }
 
     function calculate() {
-        const costProduct = parseFloat(document.getElementById('costProduct').value) || 0;
-        const costPackaging = parseFloat(document.getElementById('costPackaging').value) || 0;
-        const feeCommission = (parseFloat(document.getElementById('feeCommission').value) || 0) / 100;
-        const feeTax = (parseFloat(document.getElementById('feeTax').value) || 0) / 100;
-        const feeFixed = parseFloat(document.getElementById('feeFixed').value) || 0;
-        const feeShipping = parseFloat(document.getElementById('feeShipping').value) || 0;
+        const unitCost = getNum('costProduct');
+        const qty = parseInt(document.getElementById('kitQty').value) || 1;
+        const costProduct = unitCost * qty;
+        
+        const costPackaging = getNum('costPackaging');
+        const feeCommission = getNum('feeCommission') / 100;
+        const feeTax = getNum('feeTax') / 100;
+        let feeFixedInput = getNum('feeFixed');
+        const feeShipping = getNum('feeShipping');
+        const promoDiscount = getNum('promoDiscount') / 100;
         
         const mode = document.getElementById('pricingMode').value;
-        const targetValue = parseFloat(document.getElementById('targetValue').value) || 0;
-        const inputRoas = parseFloat(document.getElementById('inputRoas').value) || 0;
+        const targetValue = getNum('targetValue');
+        const inputRoas = getNum('inputRoas');
 
-        const fixedCosts = costProduct + costPackaging + feeFixed + feeShipping;
+        const baseFixedCosts = costProduct + costPackaging + feeShipping; 
         const variableFeesPercentage = feeCommission + feeTax;
 
-        let salePrice = 0, netProfit = 0, profitMargin = 0;
+        let basePrice = 0, finalPrice = 0, netProfit = 0, profitMargin = 0;
+        let appliedFixedFee = feeFixedInput;
 
-        if (mode === 'margin') {
-            const margin = targetValue / 100;
-            salePrice = fixedCosts / (1 - variableFeesPercentage - margin);
-            netProfit = salePrice * margin;
-            profitMargin = margin;
-        } else if (mode === 'price') {
-            salePrice = targetValue;
-            netProfit = salePrice - fixedCosts - (salePrice * variableFeesPercentage);
-            profitMargin = salePrice > 0 ? (netProfit / salePrice) : 0;
-        } else if (mode === 'profit') {
-            netProfit = targetValue;
-            salePrice = (fixedCosts + netProfit) / (1 - variableFeesPercentage);
-            profitMargin = salePrice > 0 ? (netProfit / salePrice) : 0;
+        if (currentMk === 'meli') {
+            if (mode === 'price') {
+                finalPrice = targetValue * (1 - promoDiscount);
+                if (finalPrice < 12.50) appliedFixedFee = finalPrice * 0.50;
+                else if (finalPrice < 29.00) appliedFixedFee = 6.25;
+                else if (finalPrice < 50.00) appliedFixedFee = 6.50;
+                else if (finalPrice < 79.00) appliedFixedFee = 6.75;
+                else appliedFixedFee = 0;
+            } else {
+                let t1 = solvePrice(baseFixedCosts, 0, 0.50, variableFeesPercentage, mode, targetValue);
+                let t2 = solvePrice(baseFixedCosts, 6.25, 0, variableFeesPercentage, mode, targetValue);
+                let t3 = solvePrice(baseFixedCosts, 6.50, 0, variableFeesPercentage, mode, targetValue);
+                let t4 = solvePrice(baseFixedCosts, 6.75, 0, variableFeesPercentage, mode, targetValue);
+                let t5 = solvePrice(baseFixedCosts, 0, 0, variableFeesPercentage, mode, targetValue);
+
+                if (t1 > 0 && t1 < 12.50) { finalPrice = t1; appliedFixedFee = t1 * 0.50; }
+                else if (t2 >= 12.50 && t2 < 29.00) { finalPrice = t2; appliedFixedFee = 6.25; }
+                else if (t3 >= 29.00 && t3 < 50.00) { finalPrice = t3; appliedFixedFee = 6.50; }
+                else if (t4 >= 50.00 && t4 < 79.00) { finalPrice = t4; appliedFixedFee = 6.75; }
+                else if (t5 >= 79.00) { finalPrice = t5; appliedFixedFee = 0; }
+                else {
+                    finalPrice = t4 > 0 ? t4 : t5; 
+                    appliedFixedFee = finalPrice >= 79 ? 0 : 6.75;
+                }
+            }
+            
+            document.getElementById('feeFixed').value = appliedFixedFee.toFixed(2);
+            document.getElementById('feeFixed').style.background = 'rgba(241, 196, 15, 0.2)';
+            setTimeout(() => document.getElementById('feeFixed').style.background = 'var(--input-bg)', 800);
+
+        } else {
+            finalPrice = solvePrice(baseFixedCosts, feeFixedInput, 0, variableFeesPercentage, mode, targetValue);
+        }
+
+        if (!isFinite(finalPrice) || finalPrice < 0) finalPrice = 0;
+
+        basePrice = promoDiscount > 0 ? finalPrice / (1 - promoDiscount) : finalPrice;
+        netProfit = finalPrice - baseFixedCosts - appliedFixedFee - (finalPrice * variableFeesPercentage);
+        profitMargin = finalPrice > 0 ? (netProfit / finalPrice) : 0;
+
+        const meliAlert = document.getElementById('meliShippingAlert');
+        const labelShip = document.getElementById('labelShipping');
+        if (currentMk === 'meli' && finalPrice >= 79.00 && feeShipping === 0) {
+            meliAlert.style.display = 'block';
+            labelShip.style.color = 'var(--warning)';
+        } else {
+            meliAlert.style.display = 'none';
+            labelShip.style.color = 'var(--text-muted)';
         }
 
         const roasBox = document.getElementById('roasBox');
-        const roasStatus = document.getElementById('roasStatus');
-        const roasMargin = document.getElementById('roasMargin');
-        const resIdealRoas = document.getElementById('resIdealRoas');
-
-        const marginForAds = profitMargin - 0.10;
-        let idealRoasDisplay = marginForAds > 0 ? (1 / marginForAds).toFixed(2) : "Impossível (Aumente o Preço)";
-        resIdealRoas.innerText = idealRoasDisplay;
+        const marginForAds = profitMargin - 0.10; 
+        document.getElementById('resIdealRoas').innerText = marginForAds > 0 ? (1 / marginForAds).toFixed(2) : "Impossível";
 
         let finalProfitMargin = profitMargin;
         let statusText = "Insira seu ROAS";
-        let subText = "Para ver quanto lucro sobra de verdade.";
+        let subText = "Calcule para ver o lucro real com Ads.";
 
         if (inputRoas > 0) {
-            const adSpendPercent = 1 / inputRoas;
-            finalProfitMargin = profitMargin - adSpendPercent;
-            const finalProfitValue = salePrice * finalProfitMargin;
+            finalProfitMargin = profitMargin - (1 / inputRoas);
+            subText = `Lucro Livre: ${(finalProfitMargin * 100).toFixed(2)}% (${(finalPrice * finalProfitMargin).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})})`;
 
-            subText = `Lucro após Ads: ${(finalProfitMargin * 100).toFixed(2)}% (${finalProfitValue.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})})`;
-
-            if (finalProfitMargin >= 0.10) {
-                roasBox.className = 'roas-box status-good';
-                statusText = "🟢 ROAS Excelente!";
-            } else if (finalProfitMargin > 0) {
-                roasBox.className = 'roas-box status-warning';
-                statusText = "🟡 Atenção! Lucro Baixo";
-            } else {
-                roasBox.className = 'roas-box status-bad';
-                statusText = "🔴 Prejuízo!";
-            }
+            if (finalProfitMargin >= 0.10) { roasBox.className = 'roas-box status-good'; statusText = "🟢 Excelente!"; } 
+            else if (finalProfitMargin > 0) { roasBox.className = 'roas-box status-warning'; statusText = "🟡 Cuidado! Lucro Baixo"; } 
+            else { roasBox.className = 'roas-box status-bad'; statusText = "🔴 Prejuízo!"; }
         } else {
             roasBox.className = 'roas-box status-empty';
         }
 
-        roasStatus.innerText = statusText;
-        roasMargin.innerText = subText;
+        document.getElementById('roasStatus').innerText = statusText;
+        document.getElementById('roasMargin').innerText = subText;
+
+        const divBase = document.getElementById('divBasePrice');
+        if(promoDiscount > 0 && finalPrice > 0) {
+            divBase.style.display = 'flex';
+            document.getElementById('resBasePrice').innerText = basePrice.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        } else {
+            divBase.style.display = 'none';
+        }
 
         globalResults = {
-            costProduct, costPackaging, 
-            commissionVal: salePrice * feeCommission,
-            taxVal: salePrice * feeTax,
-            feeFixed, feeShipping, salePrice, netProfit,
-            marginBase: profitMargin * 100, 
-            roasUser: inputRoas,
-            marginReal: finalProfitMargin * 100,
-            statusText: statusText
+            mk: document.getElementById('txtMkName').innerText,
+            qty, costProduct, promoDiscount, basePrice, finalPrice, netProfit, marginBase: profitMargin * 100, roasUser: inputRoas, marginReal: finalProfitMargin * 100, statusText, appliedFixedFee
         };
 
-        document.getElementById('resSalePrice').innerText = salePrice.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        document.getElementById('resSalePrice').innerText = finalPrice.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
         document.getElementById('resNetProfit').innerText = netProfit.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
         document.getElementById('resMargin').innerText = (profitMargin * 100).toFixed(2) + '%';
         
-        document.getElementById('resultsArea').style.display = 'block';
+        const resultsArea = document.getElementById('resultsArea');
+        resultsArea.style.display = 'block';
+        resultsArea.classList.remove('animate-up');
+        void resultsArea.offsetWidth; 
+        resultsArea.classList.add('animate-up');
     }
 
     function shareWhatsApp() {
-        const brl = (val) => val.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        const brl = (v) => v.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        let txt = `*Precificação: ${globalResults.mk}*\n📦 Itens no Pedido: ${globalResults.qty}\n💰 Custo Total Produção: ${brl(globalResults.costProduct)}\n\n`;
         
-        let text = `*Resumo de Precificação*\n\n📦 *Custos:*\n- Produção: ${brl(globalResults.costProduct)}\n- Embalagem: ${brl(globalResults.costPackaging)}\n\n🧾 *Taxas:*\n- Comissão Plataforma: ${brl(globalResults.commissionVal)}\n`;
-        
-        if(globalResults.taxVal > 0) text += `- Imposto NF: ${brl(globalResults.taxVal)}\n`;
-        
-        text += `- Frete: ${brl(globalResults.feeShipping)}\n- Taxa Fixa: ${brl(globalResults.feeFixed)}\n\n💰 *Resultados Base:*\n- *Preço de Venda:* ${brl(globalResults.salePrice)}\n- Lucro (Sem Ads): ${brl(globalResults.netProfit)} (${globalResults.marginBase.toFixed(2)}%)\n\n📈 *Diagnóstico de Ads:*\n`;
-
-        if (globalResults.roasUser > 0) {
-            text += `- ROAS Aplicado: ${globalResults.roasUser}\n- Status: ${globalResults.statusText}\n- *Lucro Final (Livre):* ${globalResults.marginReal.toFixed(2)}%`;
+        if(globalResults.promoDiscount > 0) {
+            txt += `🔥 *Promoção Aplicada: ${globalResults.promoDiscount * 100}%*\n- De: ~${brl(globalResults.basePrice)}~\n- Por: *${brl(globalResults.finalPrice)}*\n\n`;
         } else {
-            text += `- Nenhum ROAS calculado.`;
+            txt += `💰 *Preço de Venda:* ${brl(globalResults.finalPrice)}\n\n`;
+        }
+        
+        txt += `📊 *Resultados:*\n- Taxa Fixa Cobrada: ${brl(globalResults.appliedFixedFee)}\n- Lucro (Sem Ads): ${brl(globalResults.netProfit)} (${globalResults.marginBase.toFixed(2)}%)\n`;
+        
+        if (globalResults.roasUser > 0) {
+            txt += `\n🎯 *Diagnóstico Ads:*\n- ROAS: ${globalResults.roasUser}\n- Lucro Livre Final: ${globalResults.marginReal.toFixed(2)}% (${globalResults.statusText})`;
         }
 
-        navigator.clipboard.writeText(text).then(() => {
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            window.open(whatsappUrl, '_blank');
-        }).catch(() => {
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-        });
+        navigator.clipboard.writeText(txt).then(() => window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank'))
+        .catch(() => window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank'));
     }
 </script>
 
